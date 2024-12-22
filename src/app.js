@@ -1,8 +1,7 @@
-// src/app.js
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const otpRoutes = require("./routes/otpRoutes");
-const cors = require('cors');
 const connectDB = require("./config/db");
 
 const app = express();
@@ -12,15 +11,18 @@ connectDB();
 
 // Enable CORS for all routes
 const corsConfig = {
-    origin: "*",
-    credential: true,
-    methods: ["GET", "PUT", "POST", "DELETE"],  // optionally specify which methods are allowed
+  origin: "http://localhost:5173", // Allow only your frontend origin
+  credentials: true, // Allow cookies or credentials
+  methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
 };
-app.use(cors(corsConfig));  
-app.options("", cors(corsConfig)); 
+
+app.use(cors(corsConfig));
+
+// Handle preflight OPTIONS requests
+app.options("*", cors(corsConfig));
 
 // Parse JSON requests
-app.use(bodyParser.json()); 
+app.use(bodyParser.json());
 
 // Routes
 app.use("/api/otp", otpRoutes);
